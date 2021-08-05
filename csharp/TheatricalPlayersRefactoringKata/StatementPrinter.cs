@@ -20,6 +20,17 @@ namespace TheatricalPlayersRefactoringKata
 
             return result;
         }
+
+        public int GetTotalVolumeCredit()
+        {
+            var result = 0;
+            foreach (var perf in Performances)
+            {
+                result += perf.GetVolumeCredit();
+            }
+
+            return result;
+        }
     }
     
     public class EnrichedPerformance : Performance
@@ -95,29 +106,7 @@ namespace TheatricalPlayersRefactoringKata
             }
 
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(data.GetTotalAmount()));
-            result += String.Format("You earned {0} credits\n", GetTotalVolumeCredit(data));
-            return result;
-        }
-
-        private static int GetTotalAmount(StatementData data)
-        {
-            var result = 0;
-            foreach (var perf in data.Performances)
-            {
-                result += perf.GetAmount();
-            }
-
-            return result;
-        }
-
-        private static int GetTotalVolumeCredit(StatementData data)
-        {
-            var result = 0;
-            foreach (var perf in data.Performances)
-            {
-                result += perf.GetVolumeCredit();
-            }
-
+            result += String.Format("You earned {0} credits\n", data.GetTotalVolumeCredit());
             return result;
         }
 
