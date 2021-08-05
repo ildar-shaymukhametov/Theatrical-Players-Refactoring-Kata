@@ -9,18 +9,22 @@ namespace TheatricalPlayersRefactoringKata
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
             var totalAmount = 0;
-            var volumeCredits = 0;
             var result = string.Format("Statement for {0}\n", invoice.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
             foreach(var perf in invoice.Performances)
             {
-                volumeCredits += GetVolumeCredit(perf, plays);
-
                 // print line for this order
                 result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", GetPlay(plays, perf).Name, ToUsd(GetAmount(perf, plays)), perf.Audience);
                 totalAmount += GetAmount(perf, plays);
             }
+
+            var volumeCredits = 0;
+            foreach (var perf in invoice.Performances)
+            {
+                volumeCredits += GetVolumeCredit(perf, plays);
+            }
+
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(totalAmount));
             result += String.Format("You earned {0} credits\n", volumeCredits);
             return result;
