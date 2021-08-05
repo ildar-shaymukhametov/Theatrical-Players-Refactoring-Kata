@@ -17,14 +17,19 @@ namespace TheatricalPlayersRefactoringKata
                 result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", GetPlay(plays, perf).Name, ToUsd(GetAmount(perf, plays)), perf.Audience);
             }
 
-            var totalAmount = 0;
+            result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(GetTotalAmount(invoice, plays)));
+            result += String.Format("You earned {0} credits\n", GetTotalVolumeCredit(invoice, plays));
+            return result;
+        }
+
+        private static int GetTotalAmount(Invoice invoice, Dictionary<string, Play> plays)
+        {
+            var result = 0;
             foreach (var perf in invoice.Performances)
             {
-                totalAmount += GetAmount(perf, plays);
+                result += GetAmount(perf, plays);
             }
 
-            result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(totalAmount));
-            result += String.Format("You earned {0} credits\n", GetTotalVolumeCredit(invoice, plays));
             return result;
         }
 
