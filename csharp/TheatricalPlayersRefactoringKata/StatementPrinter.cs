@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace TheatricalPlayersRefactoringKata
 {
@@ -84,21 +83,8 @@ namespace TheatricalPlayersRefactoringKata
     {
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
-            var data = GetPrintData(invoice, plays);
+            var data = invoice.GetPrintData(plays);
             return GetPlainText(data);
-        }
-
-        private StatementData GetPrintData(Invoice invoice, Dictionary<string, Play> plays)
-        {
-            var data = new StatementData();
-            data.Customer = invoice.Customer;
-            data.Performances = invoice.Performances.Select(x => EnrichPerfomance(x, plays)).ToList();
-            return data;
-        }
-
-        private EnrichedPerformance EnrichPerfomance(Performance performance, Dictionary<string, Play> plays)
-        {
-            return new EnrichedPerformance(performance.PlayID, performance.Audience, GetPlay(plays, performance));
         }
 
         private static string GetPlainText(StatementData data)
@@ -119,11 +105,6 @@ namespace TheatricalPlayersRefactoringKata
         private static decimal ToUsd(int amount)
         {
             return Convert.ToDecimal(amount / 100);
-        }
-
-        private static Play GetPlay(Dictionary<string, Play> plays, Performance performance)
-        {
-            return plays[performance.PlayID];
         }
     }
 }
