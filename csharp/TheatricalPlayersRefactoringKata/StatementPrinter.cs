@@ -19,10 +19,8 @@ namespace TheatricalPlayersRefactoringKata
                 totalAmount += GetAmount(perf, plays);
             }
 
-            var volumeCredits = GetTotalVolumeCredit(invoice, plays);
-
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(totalAmount));
-            result += String.Format("You earned {0} credits\n", volumeCredits);
+            result += String.Format("You earned {0} credits\n", GetTotalVolumeCredit(invoice, plays));
             return result;
         }
 
