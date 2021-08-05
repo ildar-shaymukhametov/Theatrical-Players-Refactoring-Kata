@@ -15,10 +15,7 @@ namespace TheatricalPlayersRefactoringKata
 
             foreach(var perf in invoice.Performances)
             {
-                // add volume credits
-                volumeCredits += Math.Max(perf.Audience - 30, 0);
-                // add extra credit for every ten comedy attendees
-                if ("comedy" == GetPlay(plays, perf).Type) volumeCredits += (int)Math.Floor((decimal)perf.Audience / 5);
+                volumeCredits += GetVolumeCredit(plays, perf);
 
                 // print line for this order
                 result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", GetPlay(plays, perf).Name, Convert.ToDecimal(GetAmount(perf, GetPlay(plays, perf)) / 100), perf.Audience);
@@ -26,6 +23,16 @@ namespace TheatricalPlayersRefactoringKata
             }
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
             result += String.Format("You earned {0} credits\n", volumeCredits);
+            return result;
+        }
+
+        private static int GetVolumeCredit(Dictionary<string, Play> plays, Performance perf)
+        {
+            var result = Math.Max(perf.Audience - 30, 0);
+            if ("comedy" == GetPlay(plays, perf).Type)
+            {
+                result += (int)Math.Floor((decimal)perf.Audience / 5);
+            }
             return result;
         }
 
