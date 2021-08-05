@@ -81,9 +81,8 @@ namespace TheatricalPlayersRefactoringKata
 
     public class StatementPrinter
     {
-        public string Print(Invoice invoice, Dictionary<string, Play> plays)
+        public string Print(StatementData data)
         {
-            var data = invoice.GetPrintData(plays);
             return GetPlainText(data);
         }
 
