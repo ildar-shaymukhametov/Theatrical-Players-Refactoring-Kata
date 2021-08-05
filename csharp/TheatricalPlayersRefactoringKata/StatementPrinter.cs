@@ -46,6 +46,16 @@ namespace TheatricalPlayersRefactoringKata
 
             return result;
         }
+
+        public int GetVolumeCredit()
+        {
+            var result = Math.Max(Audience - 30, 0);
+            if ("comedy" == Play.Type)
+            {
+                result += (int)Math.Floor((decimal)Audience / 5);
+            }
+            return result;
+        }
     }
 
     public class StatementPrinter
@@ -94,7 +104,7 @@ namespace TheatricalPlayersRefactoringKata
             var result = 0;
             foreach (var perf in data.Performances)
             {
-                result += GetVolumeCredit(perf);
+                result += perf.GetVolumeCredit();
             }
 
             return result;
@@ -103,16 +113,6 @@ namespace TheatricalPlayersRefactoringKata
         private static decimal ToUsd(int amount)
         {
             return Convert.ToDecimal(amount / 100);
-        }
-
-        private static int GetVolumeCredit(EnrichedPerformance performance)
-        {
-            var result = Math.Max(performance.Audience - 30, 0);
-            if ("comedy" == performance.Play.Type)
-            {
-                result += (int)Math.Floor((decimal)performance.Audience / 5);
-            }
-            return result;
         }
 
         private static Play GetPlay(Dictionary<string, Play> plays, Performance performance)
