@@ -9,6 +9,17 @@ namespace TheatricalPlayersRefactoringKata
     {
         public string Customer { get; internal set; }
         public List<EnrichedPerformance> Performances { get; internal set; }
+
+        public int GetTotalAmount()
+        {
+            var result = 0;
+            foreach (var perf in Performances)
+            {
+                result += perf.GetAmount();
+            }
+
+            return result;
+        }
     }
     
     public class EnrichedPerformance : Performance
@@ -83,7 +94,7 @@ namespace TheatricalPlayersRefactoringKata
                 result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", perf.Play.Name, ToUsd(perf.GetAmount()), perf.Audience);
             }
 
-            result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(GetTotalAmount(data)));
+            result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(data.GetTotalAmount()));
             result += String.Format("You earned {0} credits\n", GetTotalVolumeCredit(data));
             return result;
         }
