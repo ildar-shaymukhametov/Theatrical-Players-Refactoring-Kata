@@ -6,6 +6,7 @@ namespace TheatricalPlayersRefactoringKata
 {
     public class StatementData
     {
+        public string Customer { get; internal set; }
     }
 
     public class StatementPrinter
@@ -13,12 +14,13 @@ namespace TheatricalPlayersRefactoringKata
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
             var data = new StatementData();
+            data.Customer = invoice.Customer;
             return GetPlainText(data, invoice, plays);
         }
 
         private static string GetPlainText(StatementData data, Invoice invoice, Dictionary<string, Play> plays)
         {
-            var result = string.Format("Statement for {0}\n", invoice.Customer);
+            var result = string.Format("Statement for {0}\n", data.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
             foreach (var perf in invoice.Performances)
