@@ -8,12 +8,16 @@ namespace TheatricalPlayersRefactoringKata
     {
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
+            return GetPlainText(invoice, plays);
+        }
+
+        private static string GetPlainText(Invoice invoice, Dictionary<string, Play> plays)
+        {
             var result = string.Format("Statement for {0}\n", invoice.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
             foreach (var perf in invoice.Performances)
             {
-                // print line for this order
                 result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", GetPlay(plays, perf).Name, ToUsd(GetAmount(perf, plays)), perf.Audience);
             }
 
