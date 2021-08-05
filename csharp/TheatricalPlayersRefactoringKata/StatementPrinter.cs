@@ -15,11 +15,11 @@ namespace TheatricalPlayersRefactoringKata
 
             foreach(var perf in invoice.Performances)
             {
-                volumeCredits += GetVolumeCredit(plays, perf);
+                volumeCredits += GetVolumeCredit(perf, plays);
 
                 // print line for this order
-                result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", GetPlay(plays, perf).Name, ToUsd(GetAmount(perf, GetPlay(plays, perf))), perf.Audience);
-                totalAmount += GetAmount(perf, GetPlay(plays, perf));
+                result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", GetPlay(plays, perf).Name, ToUsd(GetAmount(perf, plays)), perf.Audience);
+                totalAmount += GetAmount(perf, plays);
             }
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(totalAmount));
             result += String.Format("You earned {0} credits\n", volumeCredits);
@@ -31,7 +31,7 @@ namespace TheatricalPlayersRefactoringKata
             return Convert.ToDecimal(amount / 100);
         }
 
-        private static int GetVolumeCredit(Dictionary<string, Play> plays, Performance perf)
+        private static int GetVolumeCredit(Performance perf, Dictionary<string, Play> plays)
         {
             var result = Math.Max(perf.Audience - 30, 0);
             if ("comedy" == GetPlay(plays, perf).Type)
@@ -46,10 +46,10 @@ namespace TheatricalPlayersRefactoringKata
             return plays[perf.PlayID];
         }
 
-        private static int GetAmount(Performance performance, Play play)
+        private static int GetAmount(Performance performance, Dictionary<string, Play> plays)
         {
             var result = 0;
-            switch (play.Type)
+            switch (GetPlay(plays, performance).Type)
             {
                 case "tragedy":
                     result = 40000;
@@ -67,7 +67,7 @@ namespace TheatricalPlayersRefactoringKata
                     result += 300 * performance.Audience;
                     break;
                 default:
-                    throw new Exception("unknown type: " + play.Type);
+                    throw new Exception("unknown type: " + GetPlay(plays, performance).Type);
             }
 
             return result;
