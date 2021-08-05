@@ -4,14 +4,19 @@ using System.Globalization;
 
 namespace TheatricalPlayersRefactoringKata
 {
+    public class StatementData
+    {
+    }
+
     public class StatementPrinter
     {
         public string Print(Invoice invoice, Dictionary<string, Play> plays)
         {
-            return GetPlainText(invoice, plays);
+            var data = new StatementData();
+            return GetPlainText(data, invoice, plays);
         }
 
-        private static string GetPlainText(Invoice invoice, Dictionary<string, Play> plays)
+        private static string GetPlainText(StatementData data, Invoice invoice, Dictionary<string, Play> plays)
         {
             var result = string.Format("Statement for {0}\n", invoice.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
