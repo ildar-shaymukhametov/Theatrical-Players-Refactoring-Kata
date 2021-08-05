@@ -17,10 +17,10 @@ namespace TheatricalPlayersRefactoringKata
             var data = new StatementData();
             data.Customer = invoice.Customer;
             data.Performances = invoice.Performances;
-            return GetPlainText(data, invoice, plays);
+            return GetPlainText(data, plays);
         }
 
-        private static string GetPlainText(StatementData data, Invoice invoice, Dictionary<string, Play> plays)
+        private static string GetPlainText(StatementData data, Dictionary<string, Play> plays)
         {
             var result = string.Format("Statement for {0}\n", data.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
