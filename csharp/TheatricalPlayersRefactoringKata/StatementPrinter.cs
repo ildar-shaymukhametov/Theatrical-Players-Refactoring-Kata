@@ -31,19 +31,19 @@ namespace TheatricalPlayersRefactoringKata
             return Convert.ToDecimal(amount / 100);
         }
 
-        private static int GetVolumeCredit(Performance perf, Dictionary<string, Play> plays)
+        private static int GetVolumeCredit(Performance performance, Dictionary<string, Play> plays)
         {
-            var result = Math.Max(perf.Audience - 30, 0);
-            if ("comedy" == GetPlay(plays, perf).Type)
+            var result = Math.Max(performance.Audience - 30, 0);
+            if ("comedy" == GetPlay(plays, performance).Type)
             {
-                result += (int)Math.Floor((decimal)perf.Audience / 5);
+                result += (int)Math.Floor((decimal)performance.Audience / 5);
             }
             return result;
         }
 
-        private static Play GetPlay(Dictionary<string, Play> plays, Performance perf)
+        private static Play GetPlay(Dictionary<string, Play> plays, Performance performance)
         {
-            return plays[perf.PlayID];
+            return plays[performance.PlayID];
         }
 
         private static int GetAmount(Performance performance, Dictionary<string, Play> plays)
