@@ -15,15 +15,14 @@ namespace TheatricalPlayersRefactoringKata
 
             foreach(var perf in invoice.Performances)
             {
-                var thisAmount = GetAmount(perf, GetPlay(plays, perf));
                 // add volume credits
                 volumeCredits += Math.Max(perf.Audience - 30, 0);
                 // add extra credit for every ten comedy attendees
                 if ("comedy" == GetPlay(plays, perf).Type) volumeCredits += (int)Math.Floor((decimal)perf.Audience / 5);
 
                 // print line for this order
-                result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", GetPlay(plays, perf).Name, Convert.ToDecimal(thisAmount / 100), perf.Audience);
-                totalAmount += thisAmount;
+                result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", GetPlay(plays, perf).Name, Convert.ToDecimal(GetAmount(perf, GetPlay(plays, perf)) / 100), perf.Audience);
+                totalAmount += GetAmount(perf, GetPlay(plays, perf));
             }
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
             result += String.Format("You earned {0} credits\n", volumeCredits);
