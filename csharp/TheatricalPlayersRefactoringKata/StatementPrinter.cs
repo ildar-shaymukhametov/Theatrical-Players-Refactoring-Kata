@@ -7,6 +7,7 @@ namespace TheatricalPlayersRefactoringKata
     public class StatementData
     {
         public string Customer { get; internal set; }
+        public List<Performance> Performances { get; internal set; }
     }
 
     public class StatementPrinter
@@ -15,6 +16,7 @@ namespace TheatricalPlayersRefactoringKata
         {
             var data = new StatementData();
             data.Customer = invoice.Customer;
+            data.Performances = invoice.Performances;
             return GetPlainText(data, invoice, plays);
         }
 
@@ -23,20 +25,20 @@ namespace TheatricalPlayersRefactoringKata
             var result = string.Format("Statement for {0}\n", data.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
-            foreach (var perf in invoice.Performances)
+            foreach (var perf in data.Performances)
             {
                 result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", GetPlay(plays, perf).Name, ToUsd(GetAmount(perf, plays)), perf.Audience);
             }
 
-            result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(GetTotalAmount(invoice, plays)));
-            result += String.Format("You earned {0} credits\n", GetTotalVolumeCredit(invoice, plays));
+            result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(GetTotalAmount(data, plays)));
+            result += String.Format("You earned {0} credits\n", GetTotalVolumeCredit(data, plays));
             return result;
         }
 
-        private static int GetTotalAmount(Invoice invoice, Dictionary<string, Play> plays)
+        private static int GetTotalAmount(StatementData data, Dictionary<string, Play> plays)
         {
             var result = 0;
-            foreach (var perf in invoice.Performances)
+            foreach (var perf in data.Performances)
             {
                 result += GetAmount(perf, plays);
             }
@@ -44,10 +46,10 @@ namespace TheatricalPlayersRefactoringKata
             return result;
         }
 
-        private static int GetTotalVolumeCredit(Invoice invoice, Dictionary<string, Play> plays)
+        private static int GetTotalVolumeCredit(StatementData data, Dictionary<string, Play> plays)
         {
             var result = 0;
-            foreach (var perf in invoice.Performances)
+            foreach (var perf in data.Performances)
             {
                 result += GetVolumeCredit(perf, plays);
             }
