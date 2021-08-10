@@ -14,7 +14,7 @@ namespace TheatricalPlayersRefactoringKata
             var result = 0;
             foreach (var perf in Performances)
             {
-                result += perf.GetAmount();
+                result += perf.Amount;
             }
 
             return result;
@@ -25,7 +25,7 @@ namespace TheatricalPlayersRefactoringKata
             var result = 0;
             foreach (var perf in Performances)
             {
-                result += perf.GetVolumeCredit();
+                result += perf.VolumeCredit;
             }
 
             return result;
@@ -37,46 +37,13 @@ namespace TheatricalPlayersRefactoringKata
         public EnrichedPerformance(string playID, int audience, Play play) : base(playID, audience)
         {
             Play = play;
+            Amount = play.CalculateAmount(audience);
+            VolumeCredit = play.CalculateVolumeCredit(audience);
         }
 
         public Play Play { get; }
-
-        public int GetAmount()
-        {
-            var result = 0;
-            switch (Play.Type)
-            {
-                case "tragedy":
-                    result = 40000;
-                    if (Audience > 30)
-                    {
-                        result += 1000 * (Audience - 30);
-                    }
-                    break;
-                case "comedy":
-                    result = 30000;
-                    if (Audience > 20)
-                    {
-                        result += 10000 + 500 * (Audience - 20);
-                    }
-                    result += 300 * Audience;
-                    break;
-                default:
-                    throw new Exception("unknown type: " + Play.Type);
-            }
-
-            return result;
-        }
-
-        public int GetVolumeCredit()
-        {
-            var result = Math.Max(Audience - 30, 0);
-            if ("comedy" == Play.Type)
-            {
-                result += (int)Math.Floor((decimal)Audience / 5);
-            }
-            return result;
-        }
+        public int Amount { get; }
+        public int VolumeCredit { get; }
     }
 
     public class StatementPrinter
@@ -93,7 +60,7 @@ namespace TheatricalPlayersRefactoringKata
 
             foreach (var perf in data.Performances)
             {
-                result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", perf.Play.Name, ToUsd(perf.GetAmount()), perf.Audience);
+                result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", perf.Play.Name, ToUsd(perf.Amount), perf.Audience);
             }
 
             result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(data.GetTotalAmount()));
