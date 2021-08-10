@@ -4,49 +4,73 @@ using System.Globalization;
 
 namespace TheatricalPlayersRefactoringKata
 {
+    public class StatementData
+    {
+        public string Customer { get; internal set; }
+        public List<EnrichedPerformance> Performances { get; internal set; }
+
+        public int GetTotalAmount()
+        {
+            var result = 0;
+            foreach (var perf in Performances)
+            {
+                result += perf.Amount;
+            }
+
+            return result;
+        }
+
+        public int GetTotalVolumeCredit()
+        {
+            var result = 0;
+            foreach (var perf in Performances)
+            {
+                result += perf.VolumeCredit;
+            }
+
+            return result;
+        }
+    }
+    
+    public class EnrichedPerformance : Performance
+    {
+        public EnrichedPerformance(string playID, int audience, Play play) : base(playID, audience)
+        {
+            Play = play;
+            Amount = play.CalculateAmount(audience);
+            VolumeCredit = play.CalculateVolumeCredit(audience);
+        }
+
+        public Play Play { get; }
+        public int Amount { get; }
+        public int VolumeCredit { get; }
+    }
+
     public class StatementPrinter
     {
-        public string Print(Invoice invoice, Dictionary<string, Play> plays)
+        public string Print(StatementData data)
         {
-            var totalAmount = 0;
-            var volumeCredits = 0;
-            var result = string.Format("Statement for {0}\n", invoice.Customer);
+            return GetPlainText(data);
+        }
+
+        private static string GetPlainText(StatementData data)
+        {
+            var result = string.Format("Statement for {0}\n", data.Customer);
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
-            foreach(var perf in invoice.Performances) 
+            foreach (var perf in data.Performances)
             {
-                var play = plays[perf.PlayID];
-                var thisAmount = 0;
-                switch (play.Type) 
-                {
-                    case "tragedy":
-                        thisAmount = 40000;
-                        if (perf.Audience > 30) {
-                            thisAmount += 1000 * (perf.Audience - 30);
-                        }
-                        break;
-                    case "comedy":
-                        thisAmount = 30000;
-                        if (perf.Audience > 20) {
-                            thisAmount += 10000 + 500 * (perf.Audience - 20);
-                        }
-                        thisAmount += 300 * perf.Audience;
-                        break;
-                    default:
-                        throw new Exception("unknown type: " + play.Type);
-                }
-                // add volume credits
-                volumeCredits += Math.Max(perf.Audience - 30, 0);
-                // add extra credit for every ten comedy attendees
-                if ("comedy" == play.Type) volumeCredits += (int)Math.Floor((decimal)perf.Audience / 5);
-
-                // print line for this order
-                result += String.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", play.Name, Convert.ToDecimal(thisAmount / 100), perf.Audience);
-                totalAmount += thisAmount;
+                result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", perf.Play.Name, ToUsd(perf.Amount), perf.Audience);
             }
-            result += String.Format(cultureInfo, "Amount owed is {0:C}\n", Convert.ToDecimal(totalAmount / 100));
-            result += String.Format("You earned {0} credits\n", volumeCredits);
+
+            result += String.Format(cultureInfo, "Amount owed is {0:C}\n", ToUsd(data.GetTotalAmount()));
+            result += String.Format("You earned {0} credits\n", data.GetTotalVolumeCredit());
             return result;
+        }
+
+        private static decimal ToUsd(int amount)
+        {
+            return Convert.ToDecimal(amount / 100);
         }
     }
 }

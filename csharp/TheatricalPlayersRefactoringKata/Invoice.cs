@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TheatricalPlayersRefactoringKata
 {
@@ -16,5 +17,17 @@ namespace TheatricalPlayersRefactoringKata
             this._performances = performance;
         }
 
+        public StatementData GetPrintData(Dictionary<string, Play> plays)
+        {
+            var data = new StatementData();
+            data.Customer = Customer;
+            data.Performances = Performances.Select(x => EnrichPerfomance(x, plays)).ToList();
+            return data;
+        }
+
+        private EnrichedPerformance EnrichPerfomance(Performance performance, Dictionary<string, Play> plays)
+        {
+            return new EnrichedPerformance(performance.PlayID, performance.Audience, plays[performance.PlayID]);
+        }
     }
 }
