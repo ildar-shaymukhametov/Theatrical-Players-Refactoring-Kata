@@ -27,12 +27,7 @@ namespace TheatricalPlayersRefactoringKata
 
         private EnrichedPerformance EnrichPerfomance(Performance performance, Dictionary<string, Play> plays)
         {
-            return new EnrichedPerformance(performance.PlayID, performance.Audience, GetPlay(plays, performance));
-        }
-
-        private static Play GetPlay(Dictionary<string, Play> plays, Performance performance)
-        {
-            return plays[performance.PlayID];
+            return new EnrichedPerformance(performance.PlayID, performance.Audience, plays[performance.PlayID]);
         }
     }
 }
